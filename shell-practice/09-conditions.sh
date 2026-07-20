@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NUMBER=20
+NUMBER=5
 
 # -gt --> greater than
 # -lt --> less than
