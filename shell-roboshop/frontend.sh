@@ -8,8 +8,9 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+SCRIPT_DIR=$PWD
 
-mkdir -p $LOGS_FOLDER8
+mkdir -p $LOGS_FOLDER
 echo "Script started executing at: $(date)" | tee -a $LOG_FILE
 
 # check the user has root priveleges or not
@@ -32,20 +33,34 @@ VALIDATE(){
     fi
 }
 
-cp mongo.repo /etc/yum.repos.d/mongodb.repo
-VALIDATE $? "Copying MongoDB repo"
+dnf module disbale nginx -y
+VALIDATE $? "Disabling nginx"
 
-dnf install mongodb-org -y &>>$LOG_FILE
-VALIDATE $? "Installing mongodb server"
+dnf module enable nginx:1.24 -y
+VALIDATE $? "Enabling Nginx1.24"
 
-systemctl enable mongod &>>$LOG_FILE
-VALIDATE $? "Enabling MongoDB"
+dnf isntall nginx -y
+VALIDATE $? "installing nginx"
 
-systemctl start mongod &>>$LOG_FILE
-VALIDATE $? "Starting MongoDB"
+systemctl enable nginx 
+systemctl start nginx
+VALIDATE $? "start nginx"
 
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-VALIDATE $? "Editing MongoDB conf file for remote connections"
+rm -rf /usr/share/nginx/html/* 
+VALIDATE $? "Removing default content"
 
-systemctl restart mongod &>>$LOG_FILE
-VALIDATE $? "Restarting MongoDB"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+VALIDATE $? "Donwload frontend"
+
+cd /usr/share/nginx/html 
+unzip /tmp/frontend.zip
+VALIDATE $? "Unzipping the fornted code"
+
+rm -rf /etc/nginx/nginx.conf
+VALIDATE $? "Removing default ngonx conf"
+
+cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
+VALIDATE $? "Copying nginx"
+
+systemctl restart nginx
+VALIDATE $? "Restarting nginx"
