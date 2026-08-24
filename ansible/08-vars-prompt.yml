@@ -6,7 +6,7 @@
     prompt: please enter your username 
     private: true # its show the prompt details
 
-  - name: PASSWPRD
+  - name: PASSWORD
     prompt: please enter your password  
     private: true # its show the prompt details
 
@@ -15,4 +15,4 @@
     ansible.builtin.debug:
       msg: "Hello Username is: {{ USERNAME }}, password is: {{ PASSWORD }}"
 
-      
+
