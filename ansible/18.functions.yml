@@ -2,9 +2,14 @@
 - name: functions
   hosts: local
   connection: local
+  vars:
+   persons: "ramesh,Suresh,Raheem,joseph"
   tasks:
   - name: check undefined varaible
     ansible.builtin.debug:
      msg: "Hello, {{ person | default('ramesh') }}"
 
-     
+  - name: print names
+    ansible.builtin.debug:
+      msg: "Hello {{ persons | split(',') }}"
+
