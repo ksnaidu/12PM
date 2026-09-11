@@ -11,6 +11,11 @@ variable "instance_type" {
   
 }
 
+variable "instances" {
+    default =  ["mongodb", "redis", "mysql", "rabbitmq"]
+  
+}
+
 variable "ec2_tags" {
   type = map(string)
   default = {
