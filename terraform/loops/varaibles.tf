@@ -60,3 +60,14 @@ variable "environment" {
     default = "dev"
   
 }
+
+variable "zone_id" {
+    default = "Z08722562WXEO2CUTN2NL"
+  
+}
+
+variable "domain-name" {
+    default = "kimidi.site"
+  
+}
+
