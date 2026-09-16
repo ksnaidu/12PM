@@ -1,5 +1,5 @@
 variable "project" {
-    default = "robsohop"
+    default = "roboshop"
   
 }
 
@@ -8,7 +8,7 @@ variable "environment" {
   
 }
 
-variable "componet" {
+variable "component" {
     default = "cart"
   
 }
@@ -20,4 +20,3 @@ variable "common_tags" {
     }
   
 }
-
