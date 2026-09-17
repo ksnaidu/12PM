@@ -10,7 +10,7 @@ terraform {
     bucket = "12pm-remote-state"
     key    = "remote-state-demo"
     region = "us-east-1"
-    dynamodb_table= "12pm-remote-state-lock"
+    #dynamodb_table= "12pm-remote-state-lock"
     encrypt       = true
     use_lockfile  = true
   }
