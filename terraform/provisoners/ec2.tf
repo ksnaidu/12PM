@@ -8,6 +8,5 @@ resource "aws_instance" "roboshop" {
     provisioner "local-exe {
         command = "echo ${self.private_ip} > invenotry"
         on_failure = continue #ignore errors
-
     }
 }
