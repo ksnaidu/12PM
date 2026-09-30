@@ -19,3 +19,8 @@ variable "vpc_tags" {
   
 }
 
+variable "public_subnet_cidr" {
+    type = list(string)
+  
+}
+
