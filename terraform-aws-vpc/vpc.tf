@@ -31,21 +31,24 @@ resource "aws_internet_gateway" "main" {
 }
 
 
-##create subnets
+##create subnets roboshop-dev-us-east-1a
 
+#roboshop-dev-us-east-1a
 resource "aws_subnet" "public" {
-    count = length(var.public_subnet_cidr)
-    vpc_id = aws_vpc.main.id
-    cidr_block = var.public_subnet_cidr[count.index]
-    availability_zone = local.az_names[count.index] ##0 means inclusive, 2 means exclisive
-    map_public_ip_on_launch = true  # subnet instances must use public-ip required
+  count = length(var.public_subnet_cidrs)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.public_subnet_cidrs[count.index]
+  
+  availability_zone = local.az_names[count.index]
+  map_public_ip_on_launch = true
 
-   tags = merge(
+  tags = merge(
+    var.public_subnet_tags,
     local.common_tags,
     {
-    Name = "${var.project}-${var.environment}-public-${local.az_names[count.index]}"
-   }  
-   )
+        Name = "${var.project}-${var.environment}-public-${local.az_names[count.index]}"
+    }
+  )
 }
 
 
