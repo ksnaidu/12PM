@@ -1,6 +1,6 @@
 module "vpc" {
     source = "../terraform-aws-vpc"
-    porject = "roboshop"
+    project = "roboshop"
     environment = "dev"
 }
 
