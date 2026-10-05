@@ -1,34 +1,32 @@
-##VPC  roboshop-dev
-
+##VPC roboshop-dev
 resource "aws_vpc" "main" {
-    cidr_block = var.cidr_block
-    instance_tenancy = "default"
-    enable_dns_hostnames = "true"  ##host-name enable purpose
+  cidr_block       = var.cidr_block
+  instance_tenancy = "default"
+  enable_dns_hostnames = "true"  #host-names enable purpose
 
-    tags = merge(
-        var.vpc_tags,
-        local.common_tags,
-        {
-            Name = "${var.project}-${var.environment}"
-        }
-    )
-
-
+  tags = merge(
+    var.vpc_tags,
+    local.common_tags,
+    {
+        Name = "${var.project}-${var.environment}"
+    }
+  )
 }
 
-##IGW roboshop-dev
 
+# IGW roboshop-dev
 resource "aws_internet_gateway" "main" {
-    vpc_id = aws_vpc.main.id  ##assocaitaon with vpc
+  vpc_id = aws_vpc.main.id # association with VPC
 
-    tags = mergae(
-        var.igw_tags
-    )
-  
+  tags = merge(
+    ###var.igw_tags,
+    local.common_tags,
+    {
+        Name = "${var.project}-${var.environment}"
+    }
+  )
 }
 
-
-##create subnets roboshop-dev-us-east-1a
 
 #roboshop-dev-us-east-1a
 resource "aws_subnet" "public" {
@@ -49,7 +47,7 @@ resource "aws_subnet" "public" {
 }
 
 
-# create private-subnet
+
 resource "aws_subnet" "private" {
   count = length(var.private_subnet_cidrs)
   vpc_id     = aws_vpc.main.id
@@ -68,7 +66,6 @@ resource "aws_subnet" "private" {
 }
 
 
-## database-subnets creation
  resource "aws_subnet" "database" {
   count = length(var.database_subnet_cidrs)
   vpc_id     = aws_vpc.main.id
@@ -86,6 +83,7 @@ resource "aws_subnet" "private" {
 }
 
 
+
 resource "aws_eip" "nat" {
   domain   = "vpc"
   tags = merge(
@@ -97,39 +95,32 @@ resource "aws_eip" "nat" {
   )
 }
 
-## create NAT gateway
+
 resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public[0].id
 
-  tags = mergae(
-    var.aws_nat_gateway_tags,
+  tags = merge(
+    var.nat_gateway_tags,
     local.common_tags,
     {
-    
       Name = "${var.project}-${var.environment}"
-  }
-
-  # To ensure proper ordering, it is recommended to add an explicit dependency
-  # on the Internet Gateway for the VPC.
-  depends_on = [aws_internet_gateway.main]
-}
-
-
-##Routetable
-
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-
-  tags = meger(
-    var.public_route_table_tags,
-    local.common_tags,
-    {
-         Name = "${var.project}-${var.environment}-public"
     }
   )
 }
 
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.public_route_table_tags,
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-public"
+    }
+  )
+}
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
@@ -156,14 +147,10 @@ resource "aws_route_table" "database" {
 }
 
 
-
-### Routetables creatd now we want to add the route.
-
-resource "aws_route" "public"{
-     route_table_id = aws_route_table.public.id
-     destiantion_cidr_block = "0.0.0.0/0"
-     gateqay_id = aws_internet_gateway.main.id
-
+resource "aws_route" "public" {
+  route_table_id            = aws_route_table.public.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.main.id
 }
 
 resource "aws_route" "private" {
@@ -179,13 +166,11 @@ resource "aws_route" "database" {
 }
 
 
-## Route table association
 resource "aws_route_table_association" "public" {
   count = length(var.public_subnet_cidrs) # 2times run so length is using.
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
-
 
 resource "aws_route_table_association" "private" {
   count = length(var.private_subnet_cidrs)
