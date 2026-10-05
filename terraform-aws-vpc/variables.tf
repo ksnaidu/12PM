@@ -37,3 +37,9 @@ variable "database_subnet_tags" {
     type = map(string)
     default = {}
 }
+
+variable "eip_tags" {
+    type = map(string)
+    default = {}
+  
+}
