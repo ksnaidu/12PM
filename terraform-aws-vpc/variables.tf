@@ -1,26 +1,39 @@
-variable "project" {
-    type = string
-  
+      variable "vpc_tags" {
+      type = map(string)
+	  default = {}
 }
 
-variable "environment" {
-    type = string
-  
+      variable "igw_tags" {
+      type = map(string)
+	  default = {}
 }
 
-variable "cidr_block" {
-    default = "10.0.0.0/16"
-  
+   variable "public_subnet_cidrs" {
+    type = list(string)
 }
 
-variable "vpc_tags" {
+
+variable "public_subnet_tags" {
     type = map(string)
     default = {}
-  
 }
 
-variable "public_subnet_cidr" {
+   variable "private_subnet_cidrs" {
     type = list(string)
-  
 }
 
+
+variable "private_subnet_tags" {
+    type = map(string)
+    default = {}
+}
+
+variable "database_subnet_cidrs" {
+    type = list(string)
+}
+
+
+variable "database_subnet_tags" {
+    type = map(string)
+    default = {}
+}
