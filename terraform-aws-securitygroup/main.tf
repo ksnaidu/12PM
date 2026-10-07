@@ -1,6 +1,6 @@
 ##roboshop-dev-frontend
 resource "aws_security_group" "main" {
-    name = "${var.project}-{var.environment}-${var.sg_name}"
+    name = "${var.project}-{var.environment}-${var.sg_name}" ## roboshop-dev-allow-all
     description = var.sg_description
     vpc_id = var.vpc_id
 
