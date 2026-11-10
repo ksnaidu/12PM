@@ -1,9 +1,12 @@
-output "public_subnet_ids" {
-    value = aws_subnet.public[*].id  ## means all id's
-  
+output "vpc_id" {
+  value       = aws_vpc.main.id
 }
 
- output "private_subnet_ids" {
+output "public_subnet_ids" {
+  value = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
   value = aws_subnet.private[*].id
 }
 
