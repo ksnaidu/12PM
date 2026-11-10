@@ -82,7 +82,7 @@ resource "aws_subnet" "private" {
   )
 }
 
-
+##EIP
 
 resource "aws_eip" "nat" {
   domain   = "vpc"
@@ -95,7 +95,7 @@ resource "aws_eip" "nat" {
   )
 }
 
-
+##NAT GATEWAY
 resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public[0].id
@@ -109,7 +109,7 @@ resource "aws_nat_gateway" "main" {
   )
 }
 
-
+##Route table
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -146,7 +146,7 @@ resource "aws_route_table" "database" {
   )
 }
 
-
+##create ROutes
 resource "aws_route" "public" {
   route_table_id            = aws_route_table.public.id
   destination_cidr_block    = "0.0.0.0/0"
@@ -165,6 +165,7 @@ resource "aws_route" "database" {
   nat_gateway_id = aws_nat_gateway.main.id
 }
 
+###Route table associtation
 
 resource "aws_route_table_association" "public" {
   count = length(var.public_subnet_cidrs) # 2times run so length is using.
