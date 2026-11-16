@@ -106,6 +106,23 @@ resource "aws_security_group_rule" "vpn_943" {
   security_group_id = module.vpn.sg_id
 }
 
+module "mongodb" {
+    source = "../../terraform-aws-securitygroup"
+    project = var.project
+    environment = var.environment
 
+    sg_name = "mongodb"
+    sg_description = "for mongodb"
+    vpc_id = local.vpc_id
+}
 
+resource "aws_security_group_rule" "mongodb_vpn" {
+  count = length(var.mongodb_ports_vpn)
+  type              = "ingress"
+  from_port         = var.mongodb_ports_vpn[count.index]
+  to_port           = var.mongodb_ports_vpn[count.index]
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.monogdb.sg_id
+}
 
