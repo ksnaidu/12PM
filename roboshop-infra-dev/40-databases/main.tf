@@ -11,3 +11,11 @@ tags = merge(
     }
   )
 }
+
+resource "terraform_data" "mongodb" {
+  triggers_replace = [
+    aws_instance.mongodb.id
+  ]
+  
+}
+
