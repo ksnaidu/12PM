@@ -106,6 +106,8 @@ resource "aws_security_group_rule" "vpn_943" {
   security_group_id = module.vpn.sg_id
 }
 
+###mongodb
+
 module "mongodb" {
     source = "../../terraform-aws-securitygroup"
     project = var.project
@@ -124,5 +126,74 @@ resource "aws_security_group_rule" "mongodb_vpn" {
   protocol          = "tcp"
   source_security_group_id = module.vpn.sg_id
   security_group_id = module.mongodb.sg_id
+}
+
+###redis
+
+
+module "redis" {
+    source = "../../terraform-aws-securitygroup"
+    project = var.project
+    environment = var.environment
+
+    sg_name = "redis"
+    sg_description = "for rdis"
+    vpc_id = local.vpc_id
+}
+
+resource "aws_security_group_rule" "redis_vpn" {
+  count = length(var.redis_ports_vpn)
+  type              = "ingress"
+  from_port         = var.redis_ports_vpn[count.index]
+  to_port           = var.redis_ports_vpn[count.index]
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.redis.sg_id
+}
+
+
+##mysql
+
+module "mysql" {
+    source = "../../terraform-aws-securitygroup"
+    project = var.project
+    environment = var.environment
+
+    sg_name = "mysql"
+    sg_description = "for mysql"
+    vpc_id = local.vpc_id
+}
+
+
+resource "aws_security_group_rule" "mysql_vpn" {
+  count = length(var.mysql_ports_vpn)
+  type              = "ingress"
+  from_port         = var.mysql_ports_vpn[count.index]
+  to_port           = var.mysql_ports_vpn[count.index]
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.mysql.sg_id
+}
+
+##rabbitmq
+
+module "rabbitmq" {
+    source = "../../terraform-aws-securitygroup"
+    project = var.project
+    environment = var.environment
+
+    sg_name = "rabbitmq"
+    sg_description = "for rabbitmq"
+    vpc_id = local.vpc_id
+}
+
+resource "aws_security_group_rule" "rabbitmq_vpn" {
+  count = length(var.rabbitmq_ports_vpn)
+  type              = "ingress"
+  from_port         = var.rabbitmq_ports_vpn[count.index]
+  to_port           = var.rabbitmq_ports_vpn[count.index]
+  protocol          = "tcp"
+  source_security_group_id = module.vpn.sg_id
+  security_group_id = module.rabbitmq.sg_id
 }
 
