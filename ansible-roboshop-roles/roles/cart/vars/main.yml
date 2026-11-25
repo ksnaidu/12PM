@@ -1,2 +1,4 @@
-CATALOGUE_HOST: catalogue.kimidi.site
-REDIS_HOST: redis.kimidi.site
+
+
+CATALOGUE_HOST: catalogue.backend-{{ env }}.kimidi.online
+REDIS_HOST: redis-{{ env }}.kimidi.online
